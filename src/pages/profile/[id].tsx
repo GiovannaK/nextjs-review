@@ -1,8 +1,14 @@
 import React from 'react'
 import axios from 'axios';
 import {useRouter} from 'next/router'
+import { User } from '../../../api/User';
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 
-const Profile = ({user}) => {
+export interface UserProps {
+  user: User
+}
+
+const Profile = ({user}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter()
   if(router.isFallback){
     return <h1>Loading....</h1>
@@ -16,19 +22,18 @@ const Profile = ({user}) => {
   )
 }
 
-export async function getStaticProps(context){
+export const getStaticProps: GetStaticProps<UserProps> = async (context) => {
   const res = await axios.get('https://jsonplaceholder.typicode.com/users', {
     params: {id: context.params.id}
   })
 
   const user = await res.data[0]
-  await new Promise(res => setTimeout(res, 4000))
   return {
-    props: {user}
+    props: {user, revalidate: 10}
   }
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const res = await axios.get('https://jsonplaceholder.typicode.com/users')
 
   const users = await res.data.slice(0, 5)

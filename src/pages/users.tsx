@@ -1,22 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
+import { User } from '../../api/User';
 
-const test = ({users}) => {
-  /* const [users, setUsers] = useState([]);
+export interface UsersProps {
+  users?: User[]
+}
 
-  const fetchUsers = async () => {
-    const response = await axios.get('https://jsonplaceholder.typicode.com/users');
-    const data = await response.data
-    setUsers(data);
-  }
-
-  useEffect(() => {
-    fetchUsers();
-  }, [])
-
-  console.log(users);*/
-
+const users = ({users}: UsersProps) => {
   return (
     <div>
       {users.map(user => (
@@ -39,4 +30,4 @@ export async function getStaticProps(context){
   }
 }
 
-export default test
+export default users
